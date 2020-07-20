@@ -46,4 +46,8 @@ app.get('/:url', async (req, res) => {
     }
 })
 
+app.get('/', (req, res) => {
+    res.send('hello heroku app')
+})
+
 app.listen(9000, () => console.log('Server listening on 9k'));
