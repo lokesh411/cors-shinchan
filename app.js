@@ -2,10 +2,8 @@ const app = require('express')()
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const cors = require('cors');
-const https = require('https')
-const agent = new https.Agent({
-    rejectUnauthorized: false
-});
+const _ = require('lodash')
+
 app.use(bodyParser.json())
 app.use(cors())
 app.use((req, res, next) => {
@@ -21,7 +19,6 @@ app.post('/:url', async (req, res) => {
             headers: {
                 ...req.headers,
             },
-            httpsAgent: agent
         })
         console.log('response.data ::: ', response.data)
         return res.send(response.data);
@@ -33,11 +30,16 @@ app.post('/:url', async (req, res) => {
 app.get('/:url', async (req, res) => {
     const url = decodeURIComponent(req.params.url);
     try {
+        // const requestOptions = {
+        //     url: url,
+        //     method: 'get',
+        //     headers: _.omit(req.headers, ['cache-control', 'host', 'postman-token', 'user-agent']),
+        // }
+        // const response = await axios(requestOptions)
         const response = await axios.get(url, {
             headers: {
-                ...req.headers,
-            },
-            httpsAgent: agent,
+                ..._.pick(req.headers, ['x-auth-token', 'Authorization', 'Content-Type']),
+            }
         })
         console.log('response.data ::: ', response.data)
         return res.send(response.data);
