@@ -6,10 +6,6 @@ const _ = require('lodash')
 
 app.use(bodyParser.json())
 app.use(cors())
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next()
-})
 
 app.post('/:url', async (req, res) => {
     const url = decodeURIComponent(req.params.url);
@@ -30,12 +26,6 @@ app.post('/:url', async (req, res) => {
 app.get('/:url', async (req, res) => {
     const url = decodeURIComponent(req.params.url);
     try {
-        // const requestOptions = {
-        //     url: url,
-        //     method: 'get',
-        //     headers: _.omit(req.headers, ['cache-control', 'host', 'postman-token', 'user-agent']),
-        // }
-        // const response = await axios(requestOptions)
         const response = await axios.get(url, {
             headers: {
                 ..._.pick(req.headers, ['x-auth-token', 'Authorization', 'Content-Type']),
